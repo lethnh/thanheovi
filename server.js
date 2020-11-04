@@ -23,6 +23,7 @@ server.listen(PORT, () => {
 
 const io = socketIO(server);
 var clients = 0;
+var numUsers = 0;
 
 io.on('connection', (socket) => {
   var addedUser = false;
