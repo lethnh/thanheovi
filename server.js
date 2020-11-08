@@ -24,6 +24,7 @@ server.listen(PORT, () => {
 const io = socketIO(server);
 var clients = 0;
 var numUsers = 0;
+var users = [];
 
 io.on('connection', (socket) => {
   var addedUser = false;
@@ -48,7 +49,14 @@ io.on('connection', (socket) => {
     if (addedUser) return;
 
     // we store the username in the socket session for this client
+    console.log(users);
+    if (users.includes(username)) {
+      socket.emit('duplicate user', "user name has been taken");
+      return;
+    }
     socket.username = username;
+    users.push(username);
+    console.log(users)
     ++numUsers;
     addedUser = true;
     socket.emit('login', {
@@ -87,6 +95,7 @@ io.on('connection', (socket) => {
       });
     }
     clients--;
+    users = users.filter(function(value, index, arr){ return value != socket.username;});
     console.log('Client disconnected');
     io.sockets.emit('broadcast', {
       description: clients + ' clients connected!'
