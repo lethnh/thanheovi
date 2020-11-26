@@ -63,6 +63,8 @@ $(function () {
       message += "Đang có " + data.numUsers + " người hoạt động";
     }
     log(message);
+    console.log(data);
+    logUser(data.users);
   }
 
 
@@ -104,6 +106,20 @@ $(function () {
   const log = (message, options) => {
     var $el = $('<li>').addClass('log').text(message);
     addMessageElement($el, options);
+  }
+
+  // Log a message
+  const logUser = (users) => {
+    $('.list-users .list').html("");
+    debugger
+    for (let index = 0; index < users.length; index++) {
+      // $('.list-users .list').append($('<li>').addClass('log-user').text(users[index]));
+      $('.list-users .list').append(`<li class="log-user">
+      <span><img class="rounded-circle" src="https://picsum.photos/seed/picsum/60/60" alt="" />${users[index]}</span>
+  </li>`)
+      // addMessageElement($el, options);
+    }
+    // addMessageElement($el, options);
   }
 
   // Adds the visual chat message to the message list
@@ -275,13 +291,16 @@ $(function () {
 
   // Whenever the server emits 'user joined', log it in the chat body
   socket.on('user joined', (data) => {
+    debugger
     log(data.username + ' joined');
+    logUser(data.users);
     addParticipantsMessage(data);
   });
 
   // Whenever the server emits 'user left', log it in the chat body
   socket.on('user left', (data) => {
     log(data.username + ' left');
+    logUser(data.users);
     addParticipantsMessage(data);
     removeChatTyping(data);
   });

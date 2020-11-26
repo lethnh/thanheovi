@@ -60,12 +60,14 @@ io.on('connection', (socket) => {
     ++numUsers;
     addedUser = true;
     socket.emit('login', {
-      numUsers: numUsers
+      numUsers: numUsers,
+      users: users
     });
     // echo globally (all clients) that a person has connected
     socket.broadcast.emit('user joined', {
       username: socket.username,
-      numUsers: numUsers
+      numUsers: numUsers,
+      users: users
     });
   });
 
@@ -87,15 +89,16 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     if (addedUser) {
       --numUsers;
-
+      
+      users = users.filter(function(value, index, arr){ return value != socket.username;});
       // echo globally that this client has left
       socket.broadcast.emit('user left', {
         username: socket.username,
-        numUsers: numUsers
+        numUsers: numUsers,
+        users: users
       });
     }
     clients--;
-    users = users.filter(function(value, index, arr){ return value != socket.username;});
     console.log('Client disconnected');
     io.sockets.emit('broadcast', {
       description: clients + ' clients connected!'

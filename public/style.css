@@ -180,10 +180,8 @@ ul {
 .messages {
     height: 100%;
     margin: 0;
-    overflow-y: scroll;
     padding: 10px 20px 10px 20px;
     background-color: #18191a;
-    position: relative;
 }
 
 .message.typing .messageBody {
@@ -205,7 +203,8 @@ ul {
 
 .inputMessage {
     /* border: 10px solid #000; */
-    background-color: rgba(255, 255, 255, .1);
+    /* background-color: rgba(255, 255, 255, .1); */
+    background-color: #444444;
     bottom: 0;
     height: 60px;
     left: 0;
@@ -214,8 +213,54 @@ ul {
     border: none;
     border-radius: 18px;
     color: #fff;
-    position: absolute;
+    /* position: absolute; */
     right: 0;
-    width: 98%;
-    margin: auto auto 10px auto;
+    width: 100%;
+    /* margin: auto auto 10px auto; */
+}
+
+.card-scroll {
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    min-height: 100%;
+}
+
+
+.card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: 0.25rem;
+    padding: 0px !important;
+}
+
+.card-admin-body {}
+
+.card-body {
+    overflow: auto;
+    flex: 1 1 auto;
+    min-height: 1px;
+    padding: 0px !important;
+    background-color: #18191a;
+}
+
+.card-footer {
+    background-color: #18191a !important;
+    border-top: 1px solid white;
+}
+
+.log-user {
+    color: gray;
+    font-size: 16px;
+    margin: 5px;
+    text-align: left;
+}
+
+.log-user img {
+    margin-right: 20px;
 }
