@@ -37,11 +37,15 @@ io.on('connection', (socket) => {
   // when the client emits 'new message', this listens and executes
   socket.on('new message', (data) => {
     // we tell the client to execute 'new message'
+    console.log(data);
     socket.broadcast.emit('new message', {
       username: socket.username,
-      message: data
+      message: data.message
     });
-    io.emit('new message', data);
+    io.emit('new message', {
+      username: socket.username,
+      message: data.message
+    });
   });
 
   // when the client emits 'add user', this listens and executes
@@ -57,7 +61,7 @@ io.on('connection', (socket) => {
     socket.username = username;
     users.push(username);
     console.log(users)
-    ++numUsers;
+      ++numUsers;
     addedUser = true;
     socket.emit('login', {
       numUsers: numUsers,
@@ -89,8 +93,10 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     if (addedUser) {
       --numUsers;
-      
-      users = users.filter(function(value, index, arr){ return value != socket.username;});
+
+      users = users.filter(function (value, index, arr) {
+        return value != socket.username;
+      });
       // echo globally that this client has left
       socket.broadcast.emit('user left', {
         username: socket.username,

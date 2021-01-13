@@ -48,6 +48,7 @@ $(function () {
 
   // Prompt for setting a username
   var username;
+  
   var connected = false;
   var typing = false;
   var lastTypingTime;
@@ -70,7 +71,6 @@ $(function () {
 
   // Sets the client's username
   const setUsername = () => {
-    debugger
     username = cleanInput($usernameInput.val().trim());
 
     // If the username is valid
@@ -93,12 +93,13 @@ $(function () {
     // if there is a non-empty message and a socket connection
     if (message && connected) {
       $inputMessage.val('');
-      addChatMessage({
-        username: username,
-        message: message
-      });
+      // debugger
+      // addChatMessage({
+      //   username: username,
+      //   message: message
+      // });
       // tell server to execute 'new message' and send along one parameter
-      socket.emit('new message', message);
+      socket.emit('new message', { username: username, message: message });
     }
   }
 
@@ -111,7 +112,6 @@ $(function () {
   // Log a message
   const logUser = (users) => {
     $('.list-users .list').html("");
-    debugger
     for (let index = 0; index < users.length; index++) {
       // $('.list-users .list').append($('<li>').addClass('log-user').text(users[index]));
       $('.list-users .list').append(`<li class="log-user">
@@ -139,10 +139,17 @@ $(function () {
       .text(data.message);
 
     var typingClass = data.typing ? 'typing' : '';
-    var $messageDiv = $('<li class="message"/>')
+    if (username == data.username) {
+      var $messageDiv = $('<li class="message text-right"/>')
       .data('username', data.username)
       .addClass(typingClass)
       .append($usernameDiv, $messageBodyDiv);
+    } else {
+      var $messageDiv = $('<li class="message"/>')
+      .data('username', data.username)
+      .addClass(typingClass)
+      .append($usernameDiv, $messageBodyDiv);
+    }
 
     addMessageElement($messageDiv, options);
   }
@@ -286,12 +293,12 @@ $(function () {
 
   // Whenever the server emits 'new message', update the chat body
   socket.on('new message', (data) => {
+    debugger
     addChatMessage(data);
   });
 
   // Whenever the server emits 'user joined', log it in the chat body
   socket.on('user joined', (data) => {
-    debugger
     log(data.username + ' joined');
     logUser(data.users);
     addParticipantsMessage(data);
