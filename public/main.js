@@ -58,11 +58,11 @@ $(function () {
 
   const addParticipantsMessage = (data) => {
     var message = '';
-    if (data.numUsers === 1) {
-      message += "there's 1 participant";
-    } else {
-      message += "Đang có " + data.numUsers + " người hoạt động";
-    }
+    // if (data.numUsers === 1) {
+    //   message += "there's 1 participant";
+    // } else {
+    //   message += "Đang có " + data.numUsers + " người hoạt động";
+    // }
     log(message);
     console.log(data);
     logUser(data.users);
@@ -94,12 +94,12 @@ $(function () {
     if (message && connected) {
       $inputMessage.val('');
       // debugger
-      // addChatMessage({
-      //   username: username,
-      //   message: message
-      // });
+      addChatMessage({
+        username: username,
+        message: message
+      });
       // tell server to execute 'new message' and send along one parameter
-      socket.emit('new message', { username: username, message: message });
+      socket.emit('new message', message);
     }
   }
 
