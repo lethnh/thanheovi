@@ -293,6 +293,8 @@ $(function () {
     var $messageBodyMe = `<div class="messageBox backgroundBlue">
       <p class="messageText colorWhite">${data.message}</p>
     </div>`
+    var $isTyping = `<div><img style="
+    width: 50px;"   src="/assets/images/800.gif" /></div>`;
     var typingClass = data.typing ? 'typing' : '';
     if (username == data.username) {
       var $messageDiv = $('<div class="messageContainer message jusify-cotent-end"/>')
@@ -300,10 +302,17 @@ $(function () {
         .addClass(typingClass)
         .append($messageBodyMe);
     } else {
-      var $messageDiv = $('<div class="messageContainer message justify-content-start"/>')
+      if (typingClass) {
+        var $messageDiv = $('<div class="messageContainer message justify-content-start"/>')
+        .data('username', data.username)
+        .addClass(typingClass)
+        .append($usernameDiv, $isTyping);
+      } else {
+        var $messageDiv = $('<div class="messageContainer message justify-content-start"/>')
         .data('username', data.username)
         .addClass(typingClass)
         .append($usernameDiv, $messageBodyMe);
+      }
     }
 
     addMessageElement($messageDiv, options);
