@@ -264,3 +264,50 @@ ul {
 .log-user img {
     margin-right: 20px;
 }
+
+.messageBox {
+    background: #f3f3f3;
+    border-radius: 20px;
+    padding: 0px 20px 5px;
+    color: #fff;
+    display: inline-block;
+    max-width: 80%;
+}
+
+
+.backgroundBlue {
+    background: #2979ff;
+}
+
+.colorWhite {
+    color: #fff;
+}
+
+.messageText {
+    width: 100%;
+    letter-spacing: 0;
+    float: left;
+    font-size: 1.1em;
+    margin-bottom: 0px !important;
+    word-wrap: break-word;
+}
+
+.sentText {
+    display: flex;
+    align-items: center;
+    font-family: Helvetica;
+    color: #828282;
+    letter-spacing: .3px;
+    margin-bottom: 0px;
+}
+
+.pr-10 {
+    padding-right: 10px;
+}
+
+.messageContainer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0;
+    margin-top: 5px;
+}

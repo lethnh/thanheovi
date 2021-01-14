@@ -37,6 +37,155 @@ $(function () {
     '#3b88eb', '#3824aa', '#a700ff', '#d300e7'
   ];
 
+  var emojis = {
+    'o/': '👋',
+    '</3': '💔',
+    '<3': '\u2764\uFE0F',
+    '8-D': '😁',
+    '8D': '😁',
+    ':-D': '😁',
+    '=-3': '😁',
+    '=-D': '😁',
+    '=3': '😁',
+    '=D': '😁',
+    'B^D': '😁',
+    'X-D': '😁',
+    'XD': '😁',
+    'x-D': '😁',
+    'xD': '😁',
+    ':\')': '😂',
+    ':\'-)': '😂',
+    ':-))': '😃',
+    '8)': '😄',
+    ':)': '\uD83D\uDE03',
+    ':-)': '😄',
+    ':3': '😄',
+    ':D': '\uD83D\uDE00',
+    ':]': '😄',
+    ':^)': '😄',
+    ':c)': '😄',
+    ':o)': '😄',
+    ':}': '😄',
+    ':っ)': '😄',
+    '=)': '😄',
+    '=]': '😄',
+    '0:)': '😇',
+    '0:-)': '😇',
+    '0:-3': '😇',
+    '0:3': '😇',
+    '0;^)': '😇',
+    'O:-)': '😇',
+    '3:)': '😈',
+    '3:-)': '😈',
+    '}:)': '😈',
+    '}:-)': '😈',
+    '*)': '😉',
+    '*-)': '😉',
+    ':-,': '😉',
+    ';)': '😉',
+    ';-)': '😉',
+    ';-]': '😉',
+    ';D': '😉',
+    ';]': '😉',
+    ';^)': '😉',
+    ':-|': '😐',
+    ':|': '😐',
+    ':(': '😒',
+    ':-(': '😒',
+    ':-<': '😒',
+    ':-[': '😒',
+    ':-c': '😒',
+    ':<': '😒',
+    ':[': '😒',
+    ':c': '😒',
+    ':{': '😒',
+    ':っC': '😒',
+    '%)': '😖',
+    '%-)': '😖',
+    ':-P': '😜',
+    ':-b': '😜',
+    ':-p': '😜',
+    ':-Þ': '😜',
+    ':-þ': '😜',
+    ':P': '😜',
+    ':b': '😜',
+    ':p': '😜',
+    ':Þ': '😜',
+    ':þ': '😜',
+    ';(': '😜',
+    '=p': '😜',
+    'X-P': '😜',
+    'XP': '😜',
+    'd:': '😜',
+    'x-p': '😜',
+    'xp': '😜',
+    ':-||': '😠',
+    ':@': '😠',
+    ':-.': '😡',
+    ':-/': '😡',
+    ':/': '😡',
+    ':L': '😡',
+    ':S': '😡',
+    ':\\': '😡',
+    '=/': '😡',
+    '=L': '😡',
+    '=\\': '😡',
+    ':\'(': '😢',
+    ':\'-(': '😢',
+    '^5': '😤',
+    '^<_<': '😤',
+    'o/\\o': '😤',
+    '|-O': '😫',
+    '|;-)': '😫',
+    ':###..': '😰',
+    ':-###..': '😰',
+    'D-\':': '😱',
+    'D8': '😱',
+    'D:': '😱',
+    'D:<': '😱',
+    'D;': '😱',
+    'D=': '😱',
+    'DX': '😱',
+    'v.v': '😱',
+    '8-0': '😲',
+    ':-O': '😲',
+    ':-o': '😲',
+    ':O': '😲',
+    ':o': '😲',
+    'O-O': '😲',
+    'O_O': '😲',
+    'O_o': '😲',
+    'o-o': '😲',
+    'o_O': '😲',
+    'o_o': '😲',
+    ':$': '😳',
+    '#-)': '😵',
+    ':#': '😶',
+    ':&': '😶',
+    ':-#': '😶',
+    ':-&': '😶',
+    ':-X': '😶',
+    ':X': '😶',
+    ':-J': '😼',
+    ':*': '😽',
+    ':^*': '😽',
+    'ಠ_ಠ': '🙅',
+    '*\\0/*': '🙆',
+    '\\o/': '🙆',
+    ':>': '😄',
+    '>.<': '😡',
+    '>:(': '😠',
+    '>:)': '😈',
+    '>:-)': '😈',
+    '>:/': '😡',
+    '>:O': '😲',
+    '>:P': '😜',
+    '>:[': '😒',
+    '>:\\': '😡',
+    '>;)': '😈',
+    '>_>^': '😤',
+  };
+
   // Initialize variables
   var $window = $(window);
   var $usernameInput = $('.usernameInput'); // Input for username
@@ -48,7 +197,7 @@ $(function () {
 
   // Prompt for setting a username
   var username;
-  
+
   var connected = false;
   var typing = false;
   var lastTypingTime;
@@ -68,6 +217,9 @@ $(function () {
     logUser(data.users);
   }
 
+  function escapeSpecialChars(regex) {
+    return regex.replace(/([()[{*+.$^\\|?])/g, '\\$1');
+  }
 
   // Sets the client's username
   const setUsername = () => {
@@ -137,18 +289,21 @@ $(function () {
       .css('color', getUsernameColor(data.username));
     var $messageBodyDiv = $('<span class="messageBody">')
       .text(data.message);
-
+    var $userNameMe = `<p class="sentText pr-10">${data.username}</p>`
+    var $messageBodyMe = `<div class="messageBox backgroundBlue">
+      <p class="messageText colorWhite">${data.message}</p>
+    </div>`
     var typingClass = data.typing ? 'typing' : '';
     if (username == data.username) {
-      var $messageDiv = $('<li class="message text-right"/>')
-      .data('username', data.username)
-      .addClass(typingClass)
-      .append($usernameDiv, $messageBodyDiv);
+      var $messageDiv = $('<div class="messageContainer message jusify-cotent-end"/>')
+        .data('username', data.username)
+        .addClass(typingClass)
+        .append($userNameMe, $messageBodyMe);
     } else {
-      var $messageDiv = $('<li class="message"/>')
-      .data('username', data.username)
-      .addClass(typingClass)
-      .append($usernameDiv, $messageBodyDiv);
+      var $messageDiv = $('<div class="messageContainer message justify-content-start"/>')
+        .data('username', data.username)
+        .addClass(typingClass)
+        .append($usernameDiv, $messageBodyMe);
     }
 
     addMessageElement($messageDiv, options);
@@ -163,6 +318,7 @@ $(function () {
 
   // Removes the visual chat typing message
   const removeChatTyping = (data) => {
+    debugger
     getTypingMessages(data).fadeOut(function () {
       $(this).remove();
     });
@@ -262,7 +418,12 @@ $(function () {
     }
   });
 
-  $inputMessage.on('input', () => {
+  $inputMessage.on('input', (e) => {
+    console.log('demo');
+    for (var i in emojis) {
+      var regex = new RegExp(escapeSpecialChars(i), 'gim');
+      e.target.value = e.target.value.replace(regex, emojis[i]);
+    }
     updateTyping();
   });
 
