@@ -298,7 +298,7 @@ $(function () {
       var $messageDiv = $('<div class="messageContainer message jusify-cotent-end"/>')
         .data('username', data.username)
         .addClass(typingClass)
-        .append($userNameMe, $messageBodyMe);
+        .append($messageBodyMe);
     } else {
       var $messageDiv = $('<div class="messageContainer message justify-content-start"/>')
         .data('username', data.username)
