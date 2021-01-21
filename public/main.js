@@ -228,7 +228,7 @@ $(function () {
     username = cleanInput($usernameInput.val().trim());
 
     // If the username is valid
-    if (username) {
+    if (username && avatar) {
       $loginPage.fadeOut();
       $chatPage.show();
       $loginPage.off('click');
@@ -239,6 +239,8 @@ $(function () {
         username: username,
         avatar: avatar
       });
+    } else {
+      alert("Làm ơn nhập nickname + avatar")
     }
   }
 
@@ -416,6 +418,8 @@ $(function () {
       var FR = new FileReader();
       debugger
       FR.addEventListener("load", function (e) {
+        $('.avatarInput, .avatar-label').addClass("d-none");
+        document.getElementById('avatar-fake').src = e.target.result;
         avatar = e.target.result
       });
       FR.readAsDataURL(this.files[0]);
@@ -435,6 +439,9 @@ $(function () {
   }
 
   document.getElementsByClassName("avatarInput")[0].addEventListener("change", readFile2);
+  $('#avatar-fake').click(function () {
+    $('#avatar-input').click();
+  });
 
   document.getElementById("file-input").addEventListener("change", readFile);
 
@@ -460,13 +467,14 @@ $(function () {
   // Keyboard events
 
   $window.keydown(event => {
+    debugger
     // Auto-focus the current input when a key is typed
     if (!(event.ctrlKey || event.metaKey || event.altKey)) {
       $currentInput.focus();
     }
     // When the client hits ENTER on their keyboard
     if (event.which === 13) {
-      if (username) {
+      if (username && avatar) {
         sendMessage();
         socket.emit('stop typing');
         typing = false;
