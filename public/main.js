@@ -194,6 +194,7 @@ $(function () {
 
   var $loginPage = $('.login.page'); // The login page
   var $chatPage = $('.chat.page'); // The chatroom page
+  var image;
 
   // Prompt for setting a username
   var username;
@@ -304,14 +305,14 @@ $(function () {
     } else {
       if (typingClass) {
         var $messageDiv = $('<div class="messageContainer message justify-content-start"/>')
-        .data('username', data.username)
-        .addClass(typingClass)
-        .append($usernameDiv, $isTyping);
+          .data('username', data.username)
+          .addClass(typingClass)
+          .append($usernameDiv, $isTyping);
       } else {
         var $messageDiv = $('<div class="messageContainer message justify-content-start"/>')
-        .data('username', data.username)
-        .addClass(typingClass)
-        .append($usernameDiv, $messageBodyMe);
+          .data('username', data.username)
+          .addClass(typingClass)
+          .append($usernameDiv, $messageBodyMe);
       }
     }
 
@@ -388,6 +389,38 @@ $(function () {
       }, TYPING_TIMER_LENGTH);
     }
   }
+
+  function readFile() {
+    if (this.files && this.files[0]) {
+      var FR = new FileReader();
+      debugger
+      FR.addEventListener("load", function (e) {
+        image = `<img width="100%" src=${e.target.result} />`;
+        if (username) {
+          sendMessageImage();
+          socket.emit('stop typing');
+          typing = false;
+        } else {
+          setUsername();
+        }
+      });
+      FR.readAsDataURL(this.files[0]);
+    }
+  }
+
+  // Sends a chat message
+  const sendMessageImage = () => {
+    $inputMessage.val('');
+    addChatMessage({
+      username: username,
+      message: image
+    });
+    // tell server to execute 'new message' and send along one parameter
+    socket.emit('new message', image);
+    // }
+  }
+
+  document.getElementById("file-input").addEventListener("change", readFile);
 
   // Gets the 'X is typing' messages of a user
   const getTypingMessages = (data) => {
