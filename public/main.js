@@ -240,6 +240,7 @@ $(function () {
         avatar: avatar
       });
     } else {
+      username = null;
       alert("Làm ơn nhập nickname + avatar")
     }
   }
