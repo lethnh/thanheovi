@@ -351,3 +351,10 @@ ul {
     font-size: 25px;
     cursor: pointer;
 }
+
+.avatar {
+    width: 42px;
+    min-width: 42px;
+    height: 42px;
+    font-size: 12px;
+}

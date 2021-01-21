@@ -196,8 +196,9 @@ $(function () {
   var $chatPage = $('.chat.page'); // The chatroom page
   var image;
 
-  // Prompt for setting a username
+  // Prompt for setting a username, a avatar
   var username;
+  var avatar;
 
   var connected = false;
   var typing = false;
@@ -234,7 +235,10 @@ $(function () {
       $currentInput = $inputMessage.focus();
 
       // Tell the server your username
-      socket.emit('add user', username);
+      socket.emit('add user', {
+        username: username,
+        avatar: avatar
+      });
     }
   }
 
@@ -264,11 +268,12 @@ $(function () {
 
   // Log a message
   const logUser = (users) => {
+    debugger
     $('.list-users .list').html("");
     for (let index = 0; index < users.length; index++) {
       // $('.list-users .list').append($('<li>').addClass('log-user').text(users[index]));
       $('.list-users .list').append(`<li class="log-user">
-      <span><img class="rounded-circle" src="https://picsum.photos/seed/picsum/60/60" alt="" />${users[index]}</span>
+      <span><img class="rounded-circle avatar" src="${users[index].avatar}" alt="" />${users[index].username}</span>
   </li>`)
       // addMessageElement($el, options);
     }
@@ -400,9 +405,18 @@ $(function () {
           sendMessageImage();
           socket.emit('stop typing');
           typing = false;
-        } else {
-          setUsername();
         }
+      });
+      FR.readAsDataURL(this.files[0]);
+    }
+  }
+
+  function readFile2() {
+    if (this.files && this.files[0]) {
+      var FR = new FileReader();
+      debugger
+      FR.addEventListener("load", function (e) {
+        avatar = e.target.result
       });
       FR.readAsDataURL(this.files[0]);
     }
@@ -419,6 +433,8 @@ $(function () {
     socket.emit('new message', image);
     // }
   }
+
+  document.getElementsByClassName("avatarInput")[0].addEventListener("change", readFile2);
 
   document.getElementById("file-input").addEventListener("change", readFile);
 
@@ -485,6 +501,7 @@ $(function () {
 
   // Whenever the server emits 'login', log the login message
   socket.on('login', (data) => {
+    debugger
     connected = true;
     // Display the welcome message
     var message = "Welcome to page Luôn Vui TƯơi Chat";
@@ -531,8 +548,11 @@ $(function () {
 
   socket.on('reconnect', () => {
     log('you have been reconnected');
-    if (username) {
-      socket.emit('add user', username);
+    if (username && avatar) {
+      socket.emit('add user', {
+        username: username,
+        avatar: avatar
+      });
     }
   });
 

@@ -31,7 +31,7 @@
                                 <input class="inputMessage" placeholder="Type here..." />
                                 <div class="image-upload">
                                     <label for="file-input">
-                                        <i class="fa fa-picture-o" aria-hidden="true"  class="position-absolute"></i>
+                                        <i class="fa fa-picture-o" aria-hidden="true" class="position-absolute"></i>
                                         <!-- <img src="./assets/file.svg" alt=""  height="40px"> -->
                                     </label>
                                     <input id="file-input" type="file" accept="image/*" />
@@ -51,8 +51,18 @@
             </li>
             <li class="login page">
                 <div class="form">
-                    <h3 class="title">What's your nickname?</h3>
-                    <input class="usernameInput" type="text" maxlength="14" />
+                    <div>
+                        <h3 class="title">Nhập your nickname?</h3>
+                        <input class="usernameInput" type="text" maxlength="14" />
+                    </div>
+                    <div class="mt-5">
+                        <h3 class="title">Chọn your avatar?</h3>
+                        <label for="avatar-input">
+                            <i class="fa fa-picture-o text-white fa-2x" aria-hidden="true"
+                                class="position-absolute"></i>
+                        </label>
+                        <input class="avatarInput d-none" id="avatar-input" type="file" accept="image/*" />
+                    </div>
                 </div>
             </li>
         </ul>

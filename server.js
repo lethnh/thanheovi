@@ -45,18 +45,23 @@ io.on('connection', (socket) => {
   });
 
   // when the client emits 'add user', this listens and executes
-  socket.on('add user', (username) => {
+  socket.on('add user', (data_user) => {
     if (addedUser) return;
 
     // we store the username in the socket session for this client
-    console.log(users);
-    if (users.includes(username)) {
-      socket.emit('duplicate user', "user name has been taken");
-      return;
-    }
-    socket.username = username;
-    users.push(username);
-    console.log(users)
+    // console.log(data_user);
+    users.forEach(element => {
+        element.username == data_user.username;
+        socket.emit('duplicate user', "user name has been taken");
+        return;
+    });
+    // if (users.includes(data_user.username)) {
+    //   socket.emit('duplicate user', "user name has been taken");
+    //   return;
+    // }
+    socket.username = data_user.username;
+    users.push(data_user);
+    // console.log(users)
       ++numUsers;
     addedUser = true;
     socket.emit('login', {
@@ -91,7 +96,7 @@ io.on('connection', (socket) => {
       --numUsers;
 
       users = users.filter(function (value, index, arr) {
-        return value != socket.username;
+        return value.username != socket.username;
       });
       // echo globally that this client has left
       socket.broadcast.emit('user left', {
