@@ -253,7 +253,6 @@ $(function () {
     // if there is a non-empty message and a socket connection
     if (message && connected) {
       $inputMessage.val('');
-      // debugger
       addChatMessage({
         username: username,
         message: message
@@ -271,7 +270,6 @@ $(function () {
 
   // Log a message
   const logUser = (users) => {
-    debugger
     $('.list-users .list').html("");
     for (let index = 0; index < users.length; index++) {
       // $('.list-users .list').append($('<li>').addClass('log-user').text(users[index]));
@@ -336,7 +334,7 @@ $(function () {
 
   // Removes the visual chat typing message
   const removeChatTyping = (data) => {
-    debugger
+
     getTypingMessages(data).fadeOut(function () {
       $(this).remove();
     });
@@ -401,15 +399,26 @@ $(function () {
   function readFile() {
     if (this.files && this.files[0]) {
       var FR = new FileReader();
-      debugger
-      FR.addEventListener("load", function (e) {
-        image = `<img width="100%" src=${e.target.result} />`;
+      if (this.files[0].type != "video/quicktime") {
+        FR.addEventListener("load", function (e) {
+          image = `<img width="100%" src=${e.target.result} />`;
+          if (username) {
+            sendMessageImage();
+            socket.emit('stop typing');
+            typing = false;
+          }
+        });
+      } else {
+        var url = URL.createObjectURL(this.files[0]);
+        image = `<video width="400" controls>
+        <source src="${url}" id="video_here">
+        </video>`;
         if (username) {
           sendMessageImage();
           socket.emit('stop typing');
           typing = false;
         }
-      });
+      }
       FR.readAsDataURL(this.files[0]);
     }
   }
@@ -417,7 +426,6 @@ $(function () {
   function readFile2() {
     if (this.files && this.files[0]) {
       var FR = new FileReader();
-      debugger
       FR.addEventListener("load", function (e) {
         $('.avatarInput, .avatar-label').addClass("d-none");
         document.getElementById('avatar-fake').src = e.target.result;
@@ -468,7 +476,6 @@ $(function () {
   // Keyboard events
 
   $window.keydown(event => {
-    debugger
     // Auto-focus the current input when a key is typed
     if (!(event.ctrlKey || event.metaKey || event.altKey)) {
       $currentInput.focus();
@@ -510,7 +517,6 @@ $(function () {
 
   // Whenever the server emits 'login', log the login message
   socket.on('login', (data) => {
-    debugger
     connected = true;
     // Display the welcome message
     var message = "Welcome to page Luôn Vui TƯơi Chat";
@@ -522,7 +528,6 @@ $(function () {
 
   // Whenever the server emits 'new message', update the chat body
   socket.on('new message', (data) => {
-    debugger
     addChatMessage(data);
   });
 
